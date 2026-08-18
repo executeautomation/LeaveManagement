@@ -1,3 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect --
+ * The post-mount hydration flag is the canonical pattern for SSR/CSR mismatch
+ * detection on web; useSyncExternalStore is overkill here.
+ */
 import { useEffect, useState } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
 

@@ -176,7 +176,7 @@ export default function ProfileScreen() {
                   themeColor="textSecondary"
                   style={{ textAlign: 'center' }}
                 >
-                  Used by the dashboard's weather card
+                  Used by the dashboard&apos;s weather card
                 </ThemedText>
                 <View style={styles.editorActions}>
                   <Button
@@ -305,8 +305,8 @@ export default function ProfileScreen() {
                 <View style={{ flex: 1, gap: 4 }}>
                   <ThemedText type="smallBold">days / year</ThemedText>
                   <ThemedText type="small" themeColor="textSecondary">
-                    Total annual leave you're entitled to. Affects the
-                    dashboard's "Annual days left".
+                    Total annual leave you&apos;re entitled to. Affects the
+                    dashboard&apos;s &ldquo;Annual days left&rdquo;.
                   </ThemedText>
                 </View>
               </View>

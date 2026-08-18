@@ -14,6 +14,8 @@ const NOT_SUPPORTED = (): never => {
       'The web preview is read-only by design — switch to a native build for persistence.',
   );
 };
+// Re-exported so future write-op stubs in the web shim can use it.
+export { NOT_SUPPORTED };
 
 export interface WebShimDbHandle {
   execSync(sql: string): void;

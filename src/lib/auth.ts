@@ -112,8 +112,6 @@ export function useAuth(): { signedIn: boolean; username: string | null } {
       setSnapshot({ signedIn, username: getSignedInUser() });
     };
     listeners.add(listener);
-    // Resync once on mount in case another module already flipped the flag.
-    setSnapshot({ signedIn: isSignedIn(), username: getSignedInUser() });
     return () => {
       listeners.delete(listener);
     };

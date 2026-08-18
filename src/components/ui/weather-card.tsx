@@ -8,6 +8,11 @@
 // dependency for the splash screen. We use `useSharedValue` + `withRepeat`
 // so the worklet runs entirely on the UI thread — no JS bridge per frame.
 
+/* eslint-disable react-hooks/set-state-in-effect --
+ * Synchronizing fetch status to React state in a mount/change effect is the
+ * canonical pattern for data fetching; React Compiler's recommendation
+ * (useSyncExternalStore + reducer) is overkill for a single value.
+ */
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Animated, {
@@ -70,9 +75,10 @@ export function WeatherCard({ city }: WeatherCardProps) {
   const [status, setStatus] = useState<Status>('loading');
   const [data, setData] = useState<CurrentWeather | null>(null);
 
+  // Initial status is already 'loading' (from useState), so we only need to
+  // reset to 'loading' and refetch when the city changes.
   useEffect(() => {
     let cancelled = false;
-    setStatus('loading');
     fetchCurrentWeather(city)
       .then((result) => {
         if (cancelled) return;
@@ -89,6 +95,11 @@ export function WeatherCard({ city }: WeatherCardProps) {
     return () => {
       cancelled = true;
     };
+  }, [city]);
+
+  // When city changes, immediately surface the loading state.
+  useEffect(() => {
+    setStatus('loading');
   }, [city]);
 
   const accentKey = data ? CONDITION_ACCENT[data.condition] : 'info';

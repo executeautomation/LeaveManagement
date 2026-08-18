@@ -156,7 +156,7 @@ export default function DashboardScreen() {
             </ThemedText>
             <ThemedText type="subtitle">{greeting}</ThemedText>
             <ThemedText type="small" themeColor="textSecondary">
-              Here's how your {year} leave looks today.
+              Here&apos;s how your {year} leave looks today.
             </ThemedText>
           </Animated.View>
 

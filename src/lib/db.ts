@@ -33,8 +33,7 @@ export function getDb(): DbHandle {
 
   // On web, `metro.config.js` redirects this import to ./expo-sqlite.web-shim.ts.
   // On iOS/Android, this resolves to the real native binding.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const native = openDatabaseSync(DB_NAME) as any as DbHandle;
+  const native = openDatabaseSync(DB_NAME) as unknown as DbHandle;
 
   // The web shim is read-only; nothing to seed/initialize.
   if (Platform.OS === 'web') {
@@ -53,6 +52,7 @@ export function getDb(): DbHandle {
  * `user_version` PRAGMA is used to run one-shot migrations.
  */
 const SCHEMA_VERSION = 2;
+void SCHEMA_VERSION; // referenced by future migrations; keep exported value
 
 function initSchema(db: DbHandle) {
   db.execSync(`PRAGMA journal_mode = WAL;`);

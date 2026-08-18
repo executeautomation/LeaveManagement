@@ -36,14 +36,14 @@ export interface CurrentWeather {
 }
 
 interface GeocodeResult {
-  results?: Array<{
+  results?: {
     latitude: number;
     longitude: number;
     name: string;
     country?: string;
     country_code?: string;
     admin1?: string;
-  }>;
+  }[];
 }
 
 interface ForecastResult {

@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -28,8 +28,12 @@ export default function InboxScreen() {
   const theme = useTheme();
   const { requests } = useLeaveData();
 
+  // `now` is captured once at mount via the `useState` initializer. The
+  // initializer runs only on first render (not on subsequent re-renders),
+  // so `Date.now()` is never called during render itself — which keeps the
+  // component pure (react-hooks/purity).
+  const [now] = useState(() => Date.now());
   const groups = useMemo<Group[]>(() => {
-    const now = Date.now();
     const oneDay = 24 * 60 * 60 * 1000;
     const buckets: Record<string, LeaveRequestWithType[]> = {
       Today: [],
@@ -48,6 +52,7 @@ export default function InboxScreen() {
     return Object.entries(buckets)
       .filter(([, items]) => items.length > 0)
       .map(([label, items]) => ({ label, key: label, items }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requests]);
 
   const pendingCount = requests.filter((r) => r.status === 'pending').length;

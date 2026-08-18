@@ -24,11 +24,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # Node 20 is deprecated on GitHub Actions runners as of 2025-09-19;
+          # pin to Node 24 (the current LTS line) to silence the warning.
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
+
+      # Regenerate gitignored files that `tsc` depends on
+      # (`expo-env.d.ts` and `.expo/types/router.d.ts`). Running this with the
+      # project's existing `tsconfig.json` is a no-op for the file itself —
+      # it exists purely to trigger the side-effect of writing the type files.
+      - name: Generate Expo types
+        run: npx expo customize tsconfig.json
 
       - name: Lint
         run: npm run lint

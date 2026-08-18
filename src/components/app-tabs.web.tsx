@@ -1,115 +1,103 @@
-import {
-  Tabs,
-  TabList,
-  TabTrigger,
-  TabSlot,
-  TabTriggerSlotProps,
-  TabListProps,
-} from 'expo-router/ui';
-import { SymbolView } from 'expo-symbols';
-import { Pressable, useColorScheme, View, StyleSheet } from 'react-native';
+import { Tabs } from 'expo-router';
+import type { ColorValue } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { ExternalLink } from './external-link';
-import { ThemedText } from './themed-text';
-import { ThemedView } from './themed-view';
+import { useTheme } from '@/hooks/use-theme';
 
-import { Colors, MaxContentWidth, Spacing } from '@/constants/theme';
+const TAB_GLYPH: Record<string, string> = {
+  index: '◧',
+  leave: '✓',
+  calendar: '▦',
+  inbox: '✉',
+  profile: '◯',
+};
 
 export default function AppTabs() {
+  const theme = useTheme();
+  const baseStyle = {
+    backgroundColor: theme.surface,
+    borderTopColor: theme.border,
+  };
+
   return (
-    <Tabs>
-      <TabSlot style={{ height: '100%' }} />
-      <TabList asChild>
-        <CustomTabList>
-          <TabTrigger name="home" href="/" asChild>
-            <TabButton>Home</TabButton>
-          </TabTrigger>
-          <TabTrigger name="explore" href="/explore" asChild>
-            <TabButton>Explore</TabButton>
-          </TabTrigger>
-        </CustomTabList>
-      </TabList>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.accent,
+        tabBarInactiveTintColor: theme.textMuted,
+        tabBarLabelStyle: styles.label,
+        tabBarStyle: [styles.bar, baseStyle],
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color }: { color: ColorValue }) => (
+            <Glyph color={color} char={TAB_GLYPH.index} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="leave"
+        options={{
+          title: 'Leave',
+          tabBarIcon: ({ color }: { color: ColorValue }) => (
+            <Glyph color={color} char={TAB_GLYPH.leave} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: 'Calendar',
+          tabBarIcon: ({ color }: { color: ColorValue }) => (
+            <Glyph color={color} char={TAB_GLYPH.calendar} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="inbox"
+        options={{
+          title: 'Inbox',
+          tabBarIcon: ({ color }: { color: ColorValue }) => (
+            <Glyph color={color} char={TAB_GLYPH.inbox} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }: { color: ColorValue }) => (
+            <Glyph color={color} char={TAB_GLYPH.profile} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
 
-export function TabButton({ children, isFocused, ...props }: TabTriggerSlotProps) {
+function Glyph({ color, char }: { color: ColorValue; char: string }) {
   return (
-    <Pressable {...props} style={({ pressed }) => pressed && styles.pressed}>
-      <ThemedView
-        type={isFocused ? 'backgroundSelected' : 'backgroundElement'}
-        style={styles.tabButtonView}>
-        <ThemedText type="small" themeColor={isFocused ? 'text' : 'textSecondary'}>
-          {children}
-        </ThemedText>
-      </ThemedView>
-    </Pressable>
-  );
-}
-
-export function CustomTabList(props: TabListProps) {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === 'unspecified' ? 'light' : scheme];
-
-  return (
-    <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
-        <ThemedText type="smallBold" style={styles.brandText}>
-          Expo Starter
-        </ThemedText>
-
-        {props.children}
-
-        <ExternalLink href="https://docs.expo.dev" asChild>
-          <Pressable style={styles.externalPressable}>
-            <ThemedText type="link">Docs</ThemedText>
-            <SymbolView
-              tintColor={colors.text}
-              name={{ ios: 'arrow.up.right.square', web: 'link' }}
-              size={12}
-            />
-          </Pressable>
-        </ExternalLink>
-      </ThemedView>
+    <View>
+      <Text style={[styles.glyph, { color: color as any }]}>{char}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  tabListContainer: {
-    position: 'absolute',
-    width: '100%',
-    padding: Spacing.three,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+  bar: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    height: 64,
   },
-  innerContainer: {
-    paddingVertical: Spacing.two,
-    paddingHorizontal: Spacing.five,
-    borderRadius: Spacing.five,
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexGrow: 1,
-    gap: Spacing.two,
-    maxWidth: MaxContentWidth,
+  label: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.2,
   },
-  brandText: {
-    marginRight: 'auto',
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  tabButtonView: {
-    paddingVertical: Spacing.one,
-    paddingHorizontal: Spacing.three,
-    borderRadius: Spacing.three,
-  },
-  externalPressable: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: Spacing.one,
-    marginLeft: Spacing.three,
+  glyph: {
+    fontSize: 22,
+    lineHeight: 24,
   },
 });

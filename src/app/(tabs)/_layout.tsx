@@ -8,8 +8,10 @@ export default function TabsLayout() {
   // paint already knows whether to render the tabs or bounce to /login.
   isSignedIn();
   const { signedIn } = useAuth();
+  console.log('[TABS_LAYOUT] signedIn=', signedIn);
 
   if (!signedIn) {
+    console.log('[TABS_LAYOUT] not signed in, redirecting to /login');
     return <Redirect href="/login" />;
   }
   return <AppTabs />;

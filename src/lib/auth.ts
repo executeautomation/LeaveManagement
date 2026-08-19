@@ -36,8 +36,11 @@ function readPersisted(): string | null {
       'SELECT value FROM settings WHERE key = ?',
       SESSION_KEY,
     );
-    return row?.value?.trim() ? row.value.trim() : null;
-  } catch {
+    const v = row?.value?.trim() ? row.value.trim() : null;
+    console.log('[AUTH] readPersisted key=', SESSION_KEY, 'row=', row, '->', v);
+    return v;
+  } catch (e) {
+    console.log('[AUTH] readPersisted threw', e);
     return null;
   }
 }
@@ -68,8 +71,10 @@ function setSignedIn(value: boolean, username: string | null): void {
 }
 
 export function isSignedIn(): boolean {
+  console.log('[AUTH] isSignedIn called, _signedIn was', _signedIn);
   if (_signedIn !== null) return _signedIn;
   _signedIn = readPersisted() !== null;
+  console.log('[AUTH] isSignedIn -> _signedIn=', _signedIn);
   return _signedIn;
 }
 

@@ -33,6 +33,7 @@ export default function LoginScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { signedIn } = useAuth();
+  console.log('[LOGIN_SCREEN] mounted, signedIn=', signedIn);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

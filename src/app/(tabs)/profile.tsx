@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import {
     Platform,
@@ -8,7 +9,6 @@ import {
     View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 
 import { PlatformIcon } from '@/components/platform-icon';
 import { ThemedText } from '@/components/themed-text';
